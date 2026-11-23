@@ -7,7 +7,7 @@ import { DeviceTelemetry } from '@/types/device';
 interface DashboardLayoutProps {
   children: (activeTab: NavTab) => React.ReactNode;
   patient: PatientProfile;
-  doctor: DoctorProfile;
+  doctor?: DoctorProfile;
   device: DeviceTelemetry;
   lastUpdated: number;
   alertCount?: number;

@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
+import { AuthProvider } from '@/context/AuthContext';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { DashboardPage } from '@/pages/DashboardPage';
-import { DEMO_PATIENT, DEMO_DOCTOR, DEMO_DEVICE } from '@/data/mockData';
+import { DEMO_PATIENT, DEMO_DEVICE } from '@/data/mockData';
 
-export const App: React.FC = () => {
+const AuthenticatedDashboard: React.FC = () => {
   const [alertCount, setAlertCount] = useState(1);
   const [lastUpdated] = useState(Date.now());
 
   return (
     <DashboardLayout
       patient={DEMO_PATIENT}
-      doctor={DEMO_DOCTOR}
       device={DEMO_DEVICE}
       lastUpdated={lastUpdated}
       alertCount={alertCount}
@@ -22,6 +23,16 @@ export const App: React.FC = () => {
         />
       )}
     </DashboardLayout>
+  );
+};
+
+export const App: React.FC = () => {
+  return (
+    <AuthProvider>
+      <ProtectedRoute>
+        <AuthenticatedDashboard />
+      </ProtectedRoute>
+    </AuthProvider>
   );
 };
 
