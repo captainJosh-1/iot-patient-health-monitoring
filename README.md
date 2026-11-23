@@ -1,6 +1,7 @@
 # IoT-Based Patient Health Monitoring System
 
 [![Document Status](https://img.shields.io/badge/Documentation-Phase%201%20Approved-success.svg)](#documentation-index)
+[![GitHub Repository](https://img.shields.io/badge/GitHub-captainJosh--1%2Fiot--patient--health--monitoring-181717.svg?logo=github)](https://github.com/captainJosh-1/iot-patient-health-monitoring)
 [![Hardware](https://img.shields.io/badge/Hardware-NodeMCU%20ESP8266-blue.svg)](docs/HARDWARE.md)
 [![Cloud](https://img.shields.io/badge/Cloud-Firebase%20RTDB%20(Singapore)-orange.svg)](docs/DATABASE_SCHEMA.md)
 [![Frontend](https://img.shields.io/badge/Frontend-React%20%7C%20TypeScript%20%7C%20Vite-61dafb.svg)](docs/ARCHITECTURE.md)
@@ -132,10 +133,30 @@ iot-patient-health-monitoring/
 
 ---
 
-## 7. Current Project Phase & Next Steps
+## 7. Git & GitHub Workflow Protocol
 
-- **Current Status:** **Phase 1 Complete (Repository Initialization & Architectural Documentation)**.
-- **Next Phase:** **Phase 2 (Frontend Foundation & Component Library Setup)**.
-  - Initializing Vite + React 18 + TypeScript environment in `frontend/`.
-  - Configuring Tailwind CSS with clinical color palette.
-  - Installing and setting up core shadcn/ui components.
+This project is maintained on GitHub at [`https://github.com/captainJosh-1/iot-patient-health-monitoring.git`](https://github.com/captainJosh-1/iot-patient-health-monitoring.git).
+
+All collaborators and AI development assistants must strictly adhere to this sequential 8-step workflow protocol:
+1. **Work on a complete feature or development milestone:** Implement cohesive modules strictly within the approved project scope.
+2. **Run the application and test the completed feature:** Verify local execution (`npm run dev`) and production compilation (`npm run build`).
+3. **Fix errors before considering the milestone complete:** Eliminate all TypeScript, lint, build, and runtime errors.
+4. **Review all modified and newly created files:** Perform a full audit using `git status` and `git diff`.
+5. **Check that secrets, API keys, credentials, and `.env` files are not committed:** Ensure `.env` and `.env.local` files remain gitignored. Keep `.env.example` sanitized.
+6. **Present the proposed commit message and changed-file summary to the user:** Provide conventional commit messages (`feat:`, `fix:`, `docs:`).
+7. **Wait for explicit user approval before creating a local commit:** Never run `git commit` automatically without explicit user authorization.
+8. **After the local commit, wait for separate explicit user approval before pushing to GitHub:** Remote pushes (`git push origin <branch>`) require a separate, explicit user instruction.
+
+---
+
+## 8. Current Project Phase & Next Steps
+
+- **Completed Phases:**
+  - **Phase 1 Complete:** Repository Initialization & Architectural Documentation (Committed: `8d77ef5`).
+  - **Phase 2 Complete:** Frontend Foundation & Component Library Setup (Verified build: `0 errors`).
+  - **Phase 4 Complete:** Patient Monitoring Dashboard Layout & Mock UI (Verified responsive layout & charts).
+- **Next Phase:** **Phase 3 (Doctor Authentication Module & Route Protection)**.
+  - Installing Firebase Client SDK in `frontend/`.
+  - Configuring `.env.example` for Firebase Auth keys.
+  - Building `AuthContext`, `LoginForm`, `LoginPage`, and `ProtectedRoute`.
+  - Implementing physician session logout control.

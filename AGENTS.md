@@ -105,9 +105,16 @@ At the conclusion of each turn or feature implementation, provide an unambiguous
 ### Rule 12: Provide Clear Testing Instructions
 Every feature or module delivery must conclude with step-by-step instructions for the human developer to test and verify the changes locally.
 
-### Rule 13: Do Not Commit or Push Randomly
-- Do not generate fragmented, automated Git commits for every minor edit.
-- Group related work into cohesive, milestone-based units.
+### Rule 13: Mandatory 8-Step Git & GitHub Milestone Protocol
+All Git operations must strictly follow this sequential 8-step protocol for every feature or development milestone:
+1. **Work on a complete feature or development milestone:** Implement cohesive, single-responsibility modules adhering to project scope.
+2. **Run the application and test the completed feature:** Verify functionality in the browser, ensure clean compilation (`npm run build`), and validate responsive layouts.
+3. **Fix errors before considering the milestone complete:** Resolve all TypeScript, lint, build, or runtime errors prior to requesting review.
+4. **Review all modified and newly created files:** Perform a comprehensive inspection (`git status`, `git diff`) across all working tree changes.
+5. **Check that secrets, API keys, credentials, and `.env` files are not committed:** Ensure no API keys, private tokens, service-account keys, or environment files (`.env`, `.env.local`) are staged. Verify `.env.example` is used for templates.
+6. **Present the proposed commit message and changed-file summary to the user:** Provide a clear list of files created, modified, or deleted, accompanied by a proposed conventional commit message (`docs:`, `feat:`, `fix:`, `refactor:`, `chore:`).
+7. **Wait for explicit user approval before creating a local commit:** Never run `git commit` automatically. Always pause and await unambiguous user authorization.
+8. **After the local commit, wait for separate explicit user approval before pushing to GitHub:** Remote pushes to `origin` (`https://github.com/captainJosh-1/iot-patient-health-monitoring.git`) require a distinct, separate written approval from the user. Never push automatically or combine commit and push operations.
 
 ### Rule 14: Structured Milestone Git Commits
 - Git commits must occur only after a meaningful, coherent module is completed and verified against all criteria.
@@ -118,7 +125,8 @@ Every feature or module delivery must conclude with step-by-step instructions fo
   - `refactor:` for code restructurings without behavior changes.
   - `chore:` for tooling or configuration changes.
 
-### Rule 15: Never Push to GitHub Without Explicit User Approval
-- **Absolute Rule:** You may run local Git operations (such as `git add`, `git commit`, `git status`) when authorized for milestone completion.
-- **NEVER execute `git push` to a remote GitHub repository without the user's explicit, unambiguous written approval.**
+### Rule 15: Never Push to GitHub Without Separate Explicit User Approval
+- **Remote Repository:** `origin` points to `https://github.com/captainJosh-1/iot-patient-health-monitoring.git`.
+- **Absolute Rule:** You may run local inspection commands (`git status`, `git diff`, `git remote -v`). Local commits (`git commit`) require Step 7 user approval.
+- **NEVER execute `git push` to GitHub without separate, explicit, unambiguous written approval from the user.**
 - Always prompt the user to inspect the local commit history and grant permission before any network push.

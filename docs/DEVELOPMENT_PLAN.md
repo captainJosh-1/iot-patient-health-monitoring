@@ -37,6 +37,21 @@ flowchart LR
     P10 --> P11["11. Demo & Polish"]
 ```
 
+### Git & GitHub Release Management Protocol
+
+Development is synchronized to the remote GitHub repository:  
+`https://github.com/captainJosh-1/iot-patient-health-monitoring.git` (`origin`, branch `main`).
+
+Every phase delivery and code modification must strictly follow this sequential 8-step protocol:
+1. **Work on a complete feature or development milestone:** Implement cohesive code adhering strictly to project boundaries.
+2. **Run the application and test the completed feature:** Verify functionality in local preview and ensure production compilation passes (`npm run build`).
+3. **Fix errors before considering the milestone complete:** Resolve all TypeScript, lint, build, or runtime errors before signaling completion.
+4. **Review all modified and newly created files:** Conduct a thorough working-tree review (`git status`, `git diff`).
+5. **Check that secrets, API keys, credentials, and `.env` files are not committed:** Ensure environment files and private credentials remain strictly gitignored; verify `.env.example` templates are sanitized.
+6. **Present the proposed commit message and changed-file summary to the user:** Provide conventional commit messages (`docs:`, `feat:`, `fix:`, `refactor:`, `chore:`) along with file summaries.
+7. **Wait for explicit user approval before creating a local commit:** Never create commits automatically.
+8. **After the local commit, wait for separate explicit user approval before pushing to GitHub:** Remote network pushes (`git push origin <branch>`) require separate, unambiguous written approval from the user.
+
 ---
 
 ## Phase 1: Repository Initialization & Architecture Documentation

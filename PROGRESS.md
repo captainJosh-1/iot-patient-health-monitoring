@@ -1,8 +1,8 @@
 # Development Progress Tracker: IoT Patient Health Monitoring System
 
 **Document Version:** 1.0.0  
-**Current Milestone:** Phase 1 – Architecture & Documentation Setup  
-**Last Updated:** 2026-11-19  
+**Current Milestone:** Phase 3 – Doctor Authentication Module & Route Protection (Ready to Start)  
+**Last Updated:** 2026-11-23  
 
 ---
 
@@ -11,9 +11,9 @@
 | Phase | Phase Name | Status | Completion Date | Responsible Modules |
 |:---:|---|:---:|:---:|---|
 | **Phase 1** | Repository Initialization & Architecture Documentation | **Completed** | 2026-11-19 | `docs/`, `AGENTS.md`, `.gitignore`, `README.md` |
-| **Phase 2** | Frontend Foundation & Component Library Setup | **Not Started** | - | `frontend/`, Vite, React, TS, Tailwind, shadcn/ui |
+| **Phase 2** | Frontend Foundation & Component Library Setup | **Completed** | 2026-11-19 | `frontend/`, Vite, React, TS, Tailwind, shadcn/ui |
 | **Phase 3** | Doctor Authentication Module & Route Protection | **Not Started** | - | `AuthContext.tsx`, `LoginForm.tsx`, `ProtectedRoute.tsx` |
-| **Phase 4** | Patient Monitoring Dashboard Layout & Mock UI | **Not Started** | - | `VitalCard.tsx`, `PatientBanner.tsx`, `Recharts` |
+| **Phase 4** | Patient Monitoring Dashboard Layout & Mock UI | **Completed** | 2026-11-19 | `VitalCard.tsx`, `PatientBanner.tsx`, `Recharts` |
 | **Phase 5** | Firebase Configuration & Security Rules Engineering | **Not Started** | - | `database.rules.json`, `seed_database.json` |
 | **Phase 6** | Frontend Real-Time Cloud Integration | **Not Started** | - | `useVitals.ts`, `useDevice.ts`, `useAlerts.ts` |
 | **Phase 7** | Hardware Bench Testing & Sensor Signal Verification | **Not Started** | - | NodeMCU, Pulse Sensor, DS18B20 bench sketches |
@@ -40,12 +40,12 @@
 - [x] Review documentation suite and execute Milestone Git Commit.
 
 ### Phase 2: Frontend Foundation & Component Library Setup
-- [ ] Initialize Vite + React 18 + TypeScript project in `frontend/`.
-- [ ] Configure Tailwind CSS with healthcare color palette.
-- [ ] Set up TypeScript path aliases (`@/*`).
-- [ ] Install and configure shadcn/ui core components (`Button`, `Card`, `Badge`, `Alert`, `Table`).
-- [ ] Install `lucide-react`, `clsx`, and `tailwind-merge`.
-- [ ] Verify clean compilation and development server startup.
+- [x] Initialize Vite + React 18 + TypeScript project in `frontend/`.
+- [x] Configure Tailwind CSS with healthcare color palette.
+- [x] Set up TypeScript path aliases (`@/*`).
+- [x] Install and configure shadcn/ui core components (`Button`, `Card`, `Badge`, `Alert`, `Table`).
+- [x] Install `lucide-react`, `clsx`, and `tailwind-merge`.
+- [x] Verify clean compilation and development server startup.
 
 ### Phase 3: Doctor Authentication Module & Route Protection
 - [ ] Install Firebase SDK in `frontend/`.
@@ -56,14 +56,14 @@
 - [ ] Test authentication flow and session persistence.
 
 ### Phase 4: Patient Monitoring Dashboard Layout & Mock UI
-- [ ] Create `PatientBanner` with patient demographic details.
-- [ ] Create `VitalCard` for Heart Rate (BPM) with dynamic status indicator.
-- [ ] Create `VitalCard` for Temperature (°C) with dynamic status indicator.
-- [ ] Create `OverallStatusPill` computing status (`NORMAL`, `WARNING`, `ABNORMAL`).
-- [ ] Create `DeviceStatusIndicator` with heartbeat status.
-- [ ] Implement `HeartRateChart` and `TemperatureChart` using Recharts.
-- [ ] Implement `AlertFeed` and `AlertHistoryTable`.
-- [ ] Test layout responsiveness across desktop, tablet, and mobile.
+- [x] Create `PatientBanner` with patient demographic details.
+- [x] Create `VitalCard` for Heart Rate (BPM) with dynamic status indicator.
+- [x] Create `VitalCard` for Temperature (°C) with dynamic status indicator.
+- [x] Create `OverallStatusPill` computing status (`NORMAL`, `WARNING`, `ABNORMAL`).
+- [x] Create `DeviceStatusIndicator` with heartbeat status.
+- [x] Implement `HeartRateChart` and `TemperatureChart` using Recharts.
+- [x] Implement `AlertFeed` and `AlertHistoryTable`.
+- [x] Test layout responsiveness across desktop, tablet, and mobile.
 
 ### Phase 5: Firebase Configuration & Security Rules Engineering
 - [ ] Create `.env.example` with sanitized Firebase environment variables.
@@ -107,7 +107,25 @@
 - [ ] Test device reconnection and verify automatic dashboard recovery.
 
 ### Phase 11: Production Build, Documentation Finalization & Demo Prep
-- [ ] Compile optimized production frontend build (`pnpm run build`).
+- [ ] Compile optimized production frontend build (`npm run build`).
 - [ ] Finalize all architectural documentation and schematic diagrams.
 - [ ] Prepare academic demonstration script and presentation slides.
 - [ ] Perform final repository audit and deliver project sign-off.
+
+---
+
+## 3. Git & GitHub Remote Release Protocol
+
+- **Remote Name:** `origin`
+- **Remote URL:** `https://github.com/captainJosh-1/iot-patient-health-monitoring.git`
+- **Target Branch:** `main`
+
+### Mandatory 8-Step Milestone Protocol:
+1. Work on a complete feature or development milestone.
+2. Run the application and test the completed feature (`npm run dev` & `npm run build`).
+3. Fix errors before considering the milestone complete.
+4. Review all modified and newly created files (`git status`, `git diff`).
+5. Check that secrets, API keys, credentials, and `.env` files are not committed.
+6. Present the proposed commit message and changed-file summary to the user.
+7. Wait for explicit user approval before creating a local commit.
+8. After the local commit, wait for separate explicit user approval before pushing to GitHub.
