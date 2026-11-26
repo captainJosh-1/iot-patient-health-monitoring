@@ -49,9 +49,11 @@ export function subscribeToPatient(
         return;
       }
       const val = snapshot.val();
+      const resolvedName = val.name ?? val.fullName ?? 'Registered Patient';
       const profile: PatientProfile = {
         patientId: val.patientId || patientId,
-        fullName: val.fullName || 'Registered Patient',
+        fullName: resolvedName,
+        name: resolvedName,
         age: typeof val.age === 'number' ? val.age : Number(val.age) || 0,
         gender: val.gender || 'Other',
         admissionDate:

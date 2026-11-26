@@ -9,6 +9,7 @@ import {
 export const DEFAULT_FALLBACK_PATIENT: PatientProfile = {
   patientId: DEFAULT_PATIENT_ID,
   fullName: 'Eleanor Vance',
+  name: 'Eleanor Vance',
   age: 64,
   gender: 'Female',
   admissionDate: '2026-11-15',
@@ -27,7 +28,16 @@ export function usePatient(patientId: string = DEFAULT_PATIENT_ID) {
     const unsubscribe = subscribeToPatient(
       patientId,
       (data) => {
-        setRawPatient(data);
+        if (data) {
+          const resolvedName = data.name ?? data.fullName;
+          setRawPatient({
+            ...data,
+            fullName: resolvedName || DEFAULT_FALLBACK_PATIENT.fullName,
+            name: resolvedName || DEFAULT_FALLBACK_PATIENT.fullName,
+          });
+        } else {
+          setRawPatient(null);
+        }
         setLoading(false);
       },
       (err) => {

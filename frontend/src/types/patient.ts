@@ -1,6 +1,7 @@
 export interface PatientProfile {
   patientId: string;
   fullName: string;
+  name?: string;
   age: number;
   gender: 'Female' | 'Male' | 'Other';
   admissionDate: string;
