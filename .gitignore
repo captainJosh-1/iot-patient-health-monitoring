@@ -26,6 +26,8 @@ pnpm-debug.log*
 *.crt
 service-account*.json
 google-services.json
+config.h
+firmware/**/config.h
 
 # Firebase Runtime & Logs
 .firebase/
