@@ -1,0 +1,75 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+
+    "doctors": {
+      "$doctorId": {
+        ".read": "auth != null && auth.uid === $doctorId",
+        ".write": false
+      }
+    },
+
+    "authorized_devices": {
+      "$deviceAuthUid": {
+        ".read": "auth != null && (root.child('doctors').child(auth.uid).exists() || auth.uid === $deviceAuthUid)",
+        ".write": false
+      }
+    },
+
+    "patients": {
+      ".read": "auth != null && root.child('doctors').child(auth.uid).exists()",
+      "$patientId": {
+        ".write": "auth != null && root.child('doctors').child(auth.uid).exists() && newData.exists()",
+        ".validate": "newData.hasChildren(['patientId', 'fullName', 'age', 'gender', 'assignedDeviceId', 'registeredAt']) && newData.child('patientId').val() === $patientId && newData.child('fullName').isString() && newData.child('fullName').val().length > 0 && newData.child('age').isNumber() && newData.child('age').val() >= 0 && newData.child('age').val() <= 130 && (newData.child('gender').val() === 'Female' || newData.child('gender').val() === 'Male' || newData.child('gender').val() === 'Other') && newData.child('assignedDeviceId').isString() && newData.child('assignedDeviceId').val().length > 0 && newData.child('registeredAt').isNumber() && (newData.hasChild('contactNumber') ? newData.child('contactNumber').isString() : true)"
+      }
+    },
+
+    "devices": {
+      ".read": "auth != null && root.child('doctors').child(auth.uid).exists()",
+      "$deviceId": {
+        ".write": "auth != null && newData.exists() && (root.child('doctors').child(auth.uid).exists() || (root.child('authorized_devices').child(auth.uid).exists() && root.child('authorized_devices').child(auth.uid).child('deviceId').val() === $deviceId))",
+        ".validate": "newData.hasChildren(['deviceId', 'status', 'lastSeen']) && newData.child('deviceId').val() === $deviceId && (root.child('doctors').child(auth.uid).exists() || newData.child('deviceId').val() === root.child('authorized_devices').child(auth.uid).child('deviceId').val()) && newData.child('lastSeen').isNumber() && (newData.child('status').val() === 'ONLINE' || newData.child('status').val() === 'STANDBY')"
+      }
+    },
+
+    "vitals": {
+      "latest": {
+        "$patientId": {
+          ".read": "auth != null && root.child('doctors').child(auth.uid).exists()",
+          ".write": "auth != null && newData.exists() && (root.child('doctors').child(auth.uid).exists() || (root.child('authorized_devices').child(auth.uid).exists() && root.child('authorized_devices').child(auth.uid).child('assignedPatientId').val() === $patientId && root.child('authorized_devices').child(auth.uid).child('deviceId').val() === newData.child('deviceId').val()))",
+          ".validate": "newData.hasChildren(['patientId', 'deviceId', 'heartRate', 'temperature', 'timestamp']) && newData.child('patientId').val() === $patientId && (root.child('doctors').child(auth.uid).exists() || newData.child('deviceId').val() === root.child('authorized_devices').child(auth.uid).child('deviceId').val()) && newData.child('heartRate').isNumber() && newData.child('heartRate').val() >= 30 && newData.child('heartRate').val() <= 220 && newData.child('temperature').isNumber() && newData.child('temperature').val() >= 25.0 && newData.child('temperature').val() <= 45.0 && newData.child('timestamp').isNumber()"
+        }
+      },
+      "history": {
+        "$patientId": {
+          ".read": "auth != null && root.child('doctors').child(auth.uid).exists()",
+          ".indexOn": ["timestamp"],
+          "$timestampId": {
+            ".write": "auth != null && !data.exists() && newData.exists() && (root.child('doctors').child(auth.uid).exists() || (root.child('authorized_devices').child(auth.uid).exists() && root.child('authorized_devices').child(auth.uid).child('assignedPatientId').val() === $patientId))",
+            ".validate": "newData.hasChildren(['heartRate', 'temperature', 'timestamp']) && newData.child('timestamp').isNumber() && newData.child('heartRate').isNumber() && newData.child('heartRate').val() >= 30 && newData.child('heartRate').val() <= 220 && newData.child('temperature').isNumber() && newData.child('temperature').val() >= 25.0 && newData.child('temperature').val() <= 45.0"
+          }
+        }
+      }
+    },
+
+    "alerts": {
+      "$patientId": {
+        ".read": "auth != null && root.child('doctors').child(auth.uid).exists()",
+        ".indexOn": ["timestamp", "severity", "acknowledged"],
+        "$alertId": {
+          ".write": "auth != null && root.child('doctors').child(auth.uid).exists() && newData.exists()",
+          ".validate": "(!data.exists() && newData.hasChildren(['alertId', 'patientId', 'parameter', 'value', 'severity', 'message', 'timestamp', 'acknowledged']) && newData.child('alertId').val() === $alertId && newData.child('patientId').val() === $patientId && (newData.child('parameter').val() === 'HEART_RATE' || newData.child('parameter').val() === 'TEMPERATURE') && newData.child('value').isNumber() && (newData.child('severity').val() === 'WARNING' || newData.child('severity').val() === 'ABNORMAL') && newData.child('message').isString() && newData.child('timestamp').isNumber() && newData.child('acknowledged').val() === false && !newData.hasChild('acknowledgedAt')) || (data.exists() && newData.child('alertId').val() === data.child('alertId').val() && newData.child('patientId').val() === data.child('patientId').val() && newData.child('parameter').val() === data.child('parameter').val() && newData.child('value').val() === data.child('value').val() && newData.child('severity').val() === data.child('severity').val() && newData.child('message').val() === data.child('message').val() && newData.child('timestamp').val() === data.child('timestamp').val() && data.child('acknowledged').val() === false && newData.child('acknowledged').val() === true && newData.child('acknowledgedAt').isNumber())"
+        }
+      }
+    },
+
+    "thresholds": {
+      "$patientId": {
+        ".read": "auth != null && root.child('doctors').child(auth.uid).exists()",
+        ".write": "auth != null && root.child('doctors').child(auth.uid).exists() && newData.exists()",
+        ".validate": "newData.hasChildren(['heartRateMinNormal', 'heartRateMaxNormal', 'heartRateMinWarning', 'heartRateMaxWarning', 'tempMinNormal', 'tempMaxNormal', 'tempMinWarning', 'tempMaxWarning']) && newData.child('heartRateMinNormal').isNumber() && newData.child('heartRateMaxNormal').isNumber() && newData.child('heartRateMinWarning').isNumber() && newData.child('heartRateMaxWarning').isNumber() && newData.child('tempMinNormal').isNumber() && newData.child('tempMaxNormal').isNumber() && newData.child('tempMinWarning').isNumber() && newData.child('tempMaxWarning').isNumber() && newData.child('heartRateMinWarning').val() < newData.child('heartRateMinNormal').val() && newData.child('heartRateMinNormal').val() < newData.child('heartRateMaxNormal').val() && newData.child('heartRateMaxNormal').val() < newData.child('heartRateMaxWarning').val() && newData.child('tempMinWarning').val() < newData.child('tempMinNormal').val() && newData.child('tempMinNormal').val() < newData.child('tempMaxNormal').val() && newData.child('tempMaxNormal').val() < newData.child('tempMaxWarning').val()"
+      }
+    }
+  }
+}

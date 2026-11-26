@@ -1,0 +1,15 @@
+{
+  "patients": {},
+  "devices": {
+    "esp8266_01": {
+      "deviceId": "esp8266_01",
+      "status": "STANDBY",
+      "lastSeen": 0
+    }
+  },
+  "vitals": {
+    "latest": {},
+    "history": {}
+  },
+  "alerts": {}
+}
