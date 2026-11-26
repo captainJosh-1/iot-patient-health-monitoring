@@ -10,12 +10,16 @@ This directory contains the embedded C++ firmware for the **NodeMCU ESP8266 (ESP
 firmware/esp8266/
 ├── README.md                      # Hardware setup, library dependencies, flashing guide
 └── patient_monitor/               # Core Arduino sketch folder
-    ├── patient_monitor.ino        # Setup, non-blocking loop(), serial telemetry reporter
-    ├── config.example.h           # Template configuration (pins, intervals, bounds, Wi-Fi placeholders)
+    ├── patient_monitor.ino        # Setup, non-blocking loop(), telemetry synchronization
+    ├── config.example.h           # Template configuration (pins, intervals, bounds, Wi-Fi & Firebase)
     ├── sensors_pulse.h            # Header for analog pulse sensor processing (50 Hz / 20 ms)
     ├── sensors_pulse.cpp          # Non-blocking peak detection, IBI smoothing, 30–220 BPM bounds
     ├── sensors_temp.h             # Header for Dallas DS18B20 temperature sensor (3000 ms)
-    └── sensors_temp.cpp           # Non-blocking 1-Wire reader (setWaitForConversion = false)
+    ├── sensors_temp.cpp           # Non-blocking 1-Wire reader (setWaitForConversion = false)
+    ├── wifi_manager.h             # Non-blocking Wi-Fi station and NTP time synchronization header
+    ├── wifi_manager.cpp           # Wi-Fi auto-reconnect logic and Unix epoch millisecond clock
+    ├── firebase_client.h          # Firebase Auth and REST client header
+    └── firebase_client.cpp        # Firebase Auth login/refresh and HTTPS PUT/POST telemetry publisher
 ```
 
 ---
@@ -58,12 +62,15 @@ Configure under the **Tools** menu:
 
 ## 4. Required Arduino Libraries
 
-Install the following two official libraries via **Sketch $\rightarrow$ Include Library $\rightarrow$ Manage Libraries...**:
+Install the following three official libraries via **Sketch $\rightarrow$ Include Library $\rightarrow$ Manage Libraries...**:
 
 1. **`OneWire`** by *Paul Stoffregen* (Version **2.3.7** or higher)
    - Handles low-level 1-Wire bit-banging protocol on GPIO4 (D2).
 2. **`DallasTemperature`** by *Miles Burton* (Version **3.9.0** or higher)
    - Reads DS18B20 digital temperature values with non-blocking asynchronous conversions.
+3. **`ArduinoJson`** by *Benoit Blanchon* (Version **7.x**, e.g., 7.0.4 or higher)
+   - **Important:** The firmware uses the modern unified `JsonDocument` syntax from ArduinoJson v7. Ensure version 7.x is selected (not legacy v6 `StaticJsonDocument`).
+4. **Built-in Core Libraries:** `ESP8266WiFi`, `WiFiClientSecure`, `ESP8266HTTPClient` (bundled automatically with the ESP8266 board core package).
 
 ---
 
@@ -76,8 +83,13 @@ Before flashing:
    # In terminal / PowerShell:
    cp config.example.h config.h
    ```
-3. `config.h` is protected by `.gitignore` and will never be tracked or committed to Git.
-4. If `config.h` is absent, the code automatically defaults to `config.example.h` for seamless compilation.
+3. Open `config.h` and fill in your actual network and Firebase credentials:
+   - `WIFI_SSID` & `WIFI_PASSWORD`: Your 2.4 GHz local Wi-Fi network credentials.
+   - `FIREBASE_API_KEY`: Your Firebase Web API Key (found in Firebase Console $\rightarrow$ Project Settings $\rightarrow$ General).
+   - `FIREBASE_DATABASE_URL`: Your Realtime Database URL (e.g. `https://your-project-id-default-rtdb.asia-southeast1.firebasedatabase.app` without trailing slash).
+   - `FIREBASE_DEVICE_EMAIL` & `FIREBASE_DEVICE_PASS`: The device email/password created under **Firebase Console $\rightarrow$ Authentication $\rightarrow$ Users**.
+4. `config.h` is strictly ignored by `.gitignore` and will never be tracked or committed.
+5. If `config.h` is absent, the code automatically falls back to `config.example.h` to allow offline bench testing.
 
 ---
 
@@ -87,19 +99,24 @@ Before flashing:
 2. Open `patient_monitor.ino` in Arduino IDE.
 3. Click **Upload**.
 4. Open the **Serial Monitor** at **115200 baud**.
-5. Observe telemetry output:
+5. Observe telemetry and connection output:
    ```text
    ==================================================================
     IoT-Based Patient Health Monitoring System — Edge Microcontroller
     Firmware Version: 1.0.0-academic
     Device ID:        esp8266_01
     Assigned Patient: patient_01
-    Hardware Target:  NodeMCU ESP8266 (ESP-12E)
-    Sensors:          Pulse Sensor (A0) | DS18B20 1-Wire (D2/GPIO4)
+    Hardware Target:  NodeMCU ESP8266 (ESP-12E) @ 80 MHz
+    Cloud Target:     Firebase RTDB (asia-southeast1)
    ==================================================================
-   [SYSTEM] Sensors initialized. Entering non-blocking acquisition loop...
-   [TELEMETRY] Up: 1s | Signal(A0): 514 | Heart Rate: -- BPM [NO FINGER] | Temp: 27.2 °C [VALID]
-   [TELEMETRY] Up: 2s | Signal(A0): 512 | Heart Rate: -- BPM [NO FINGER] | Temp: 27.2 °C [VALID]
+   [SYSTEM] Initialization complete. Entering non-blocking acquisition loop...
+   [WIFI] Connected successfully! IP: 192.168.1.105 | RSSI: -62 dBm
+   [NTP] UTC Time synchronized successfully! Epoch: 1716987450
+   [AUTH] Authenticating device via Firebase Auth REST API...
+   [AUTH] Device authenticated successfully! ID token acquired.
+   [TELEMETRY] Up: 3s | WiFi: CONNECTED | NTP: SYNCED | Cloud: AUTH_OK | HR: 74 BPM | Temp: 36.6 °C
    ```
-6. **Pulse Verification:** Place finger lightly on the pulse sensor optical window. Within 3–5 seconds, the status will shift to `[TRACKED]` with a live BPM reading (e.g., `72 BPM [TRACKED]`).
-7. **Temperature Verification:** Grip the waterproof DS18B20 stainless steel probe between your thumb and index finger. Observe the temperature rise smoothly from ambient (~$25\text{–}27^\circ\text{C}$) toward human body temperature (~$35\text{–}36^\circ\text{C}$).
+6. **Cloud Telemetry Verification:**
+   - Every 3 seconds: Updates `/devices/esp8266_01` (Heartbeat) and `/vitals/latest/patient_01` (Latest Vitals).
+   - Every 15 seconds: Appends a historical snapshot to `/vitals/history/patient_01`.
+   - Open your web dashboard or Firebase Console to see instantaneous updates in real time!

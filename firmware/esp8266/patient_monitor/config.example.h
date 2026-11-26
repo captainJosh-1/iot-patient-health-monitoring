@@ -11,10 +11,12 @@
 // ==============================================================================
 // Non-Blocking Sampling & Telemetry Intervals
 // ==============================================================================
-#define PULSE_SAMPLE_INTERVAL_MS    20    // 50 Hz optical pulse sampling
-#define TEMP_SAMPLE_INTERVAL_MS     3000  // 3-second thermal reading cycle
-#define SERIAL_TELEMETRY_INTERVAL_MS 1000 // 1-second Serial Monitor report
-#define SERIAL_BAUD_RATE            115200
+#define PULSE_SAMPLE_INTERVAL_MS     20    // 50 Hz optical pulse sampling
+#define TEMP_SAMPLE_INTERVAL_MS      3000  // 3-second thermal reading cycle
+#define TELEMETRY_INTERVAL_MS        3000  // 3-second heartbeat & latest vitals cloud sync
+#define HISTORY_INTERVAL_MS          15000 // 15-second historical telemetry append
+#define SERIAL_TELEMETRY_INTERVAL_MS 1000  // 1-second Serial Monitor report
+#define SERIAL_BAUD_RATE             115200
 
 // ==============================================================================
 // Clinical Validation Boundaries
@@ -39,14 +41,21 @@
 #define FIRMWARE_VERSION "1.0.0-academic"
 
 // ==============================================================================
-// Placeholders for Wi-Fi & Firebase Realtime Database (Phase 9)
-// Copy this file to config.h and insert your local network credentials.
+// Wi-Fi & Firebase Realtime Database Credentials (Phase 9)
+// Copy this file to config.h and insert your actual network & Firebase credentials.
 // NEVER commit config.h to version control.
 // ==============================================================================
-#define WIFI_SSID         "YOUR_WIFI_SSID"
-#define WIFI_PASSWORD     "YOUR_WIFI_PASSWORD"
-#define FIREBASE_RTDB_URL "https://YOUR_PROJECT_ID-default-rtdb.asia-southeast1.firebasedatabase.app"
-#define DEVICE_AUTH_EMAIL "esp8266_01@iot-hospital.internal"
-#define DEVICE_AUTH_PASS  "YOUR_DEVICE_AUTH_PASSWORD"
+#define WIFI_SSID              "YOUR_WIFI_SSID"
+#define WIFI_PASSWORD          "YOUR_WIFI_PASSWORD"
+
+// Firebase Web API Key (from Firebase Console -> Project Settings -> General)
+#define FIREBASE_API_KEY       "YOUR_FIREBASE_WEB_API_KEY"
+
+// Firebase Realtime Database Base URL (Singapore region, NO trailing slash)
+#define FIREBASE_DATABASE_URL  "https://YOUR_PROJECT_ID-default-rtdb.asia-southeast1.firebasedatabase.app"
+
+// Device Firebase Authentication Credentials (created under Authentication -> Users)
+#define FIREBASE_DEVICE_EMAIL  "esp8266_01@iot-hospital.internal"
+#define FIREBASE_DEVICE_PASS   "YOUR_DEVICE_AUTH_PASSWORD"
 
 #endif // CONFIG_H
